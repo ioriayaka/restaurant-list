@@ -16,6 +16,16 @@ app.use(express.static('public'))
 app.get('/', (req, res) => {
   res.render('index', { restaurants: restaurants.results})
 })
+//search route
+app.get('/search', (req, res) => {
+  const keyword = req.query.keyword
+  const searchResults = restaurants.results.filter(restaurant => {
+    return restaurant.name_en.toLocaleLowerCase().includes(keyword.toLocaleLowerCase()) ||
+      restaurant.name.toLocaleLowerCase().includes(keyword.toLocaleLowerCase()) ||
+      restaurant.category.toLocaleLowerCase().includes(keyword.toLocaleLowerCase())
+  })
+  res.render('index', { restaurants: searchResults, keyword: keyword })
+})
 //show page route
 app.get('/restaurants/:restaurant_id', (req, res) => {
   const restaurant = restaurants.results.find(restaurant => restaurant.id.toString() === req.params.restaurant_id)  
